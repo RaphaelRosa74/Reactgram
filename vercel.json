@@ -1,18 +1,15 @@
 {
   "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/build",
+  
   "builds": [
     {
       "src": "backend/index.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
     }
   ],
+  
   "routes": [
     {
       "src": "/api/(.*)",
@@ -22,6 +19,5 @@
       "src": "/(.*)",
       "dest": "/frontend/build/index.html"
     }
-  ],
-  "outputDirectory": "frontend/build"
+  ]
 }
