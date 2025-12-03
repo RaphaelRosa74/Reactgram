@@ -30,10 +30,10 @@ app.use(router);
 
 // Make sure to put this after all api routes are being handled (e.g. app.use('/api/authorize', authRoutes);)
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) => {
-    return res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+    return res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
   });
 }
 
