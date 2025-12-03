@@ -37,6 +37,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(port, () => {
-  console.log(`A aplicação está rodando na porta ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`A aplicação está rodando na porta ${port}`);
+// });
