@@ -1,42 +1,32 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
-const path = require("path");
+import express from "express";
+import path from "path";
 import { fileURLToPath } from "url";
-const cors = require("cors");
-//DB connection
-require("./config/db.js");
+import cors from "cors";
+import serverless from "serverless-http";
+import "./config/db.js"; // DB connection
 
-const port = process.env.PORT;
 const __filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-//config JSON and from fata response
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//Solve CORS
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({
+  credentials: true,
+  origin: "*", // must be * for vercel unless you add domain
+}));
 
-//Upload directory
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+// uploads (must be moved to storage; Vercel FS is read-only)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-//routes
-const router = require("./routes/router.js");
+// routes
+import router from "./routes/router.js";
+app.use("/api", router);
 
-app.use(router);
-
-// Make sure to put this after all api routes are being handled (e.g. app.use('/api/authorize', authRoutes);)
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../../frontend/build")));
-
-  app.get("*", (req, res) => {
-    return res.sendFile(path.join(__dirname, "../../frontend/build/index.html"));
-  });
-}
-
-// app.listen(port, () => {
-//   console.log(`A aplicação está rodando na porta ${port}`);
-// });
+// export serverless handler
+export const handler = serverless(app);
